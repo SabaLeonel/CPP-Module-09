@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
     }
 
     BitcoinExchange exchange;
-    exchange.loadPriceDb("price_db.csv"); // Assuming the DB filename
+    exchange.loadPriceDb("data.csv"); // Assuming the DB filename
 
     std::string line;
     while (getline(inputFile, line)) {
