@@ -1,30 +1,65 @@
 #include "BitcoinExchange.hpp"
 
+BitcoinExchange::BitcoinExchange() {
+    std::ifstream file;
+    std::string date;
+    float value;
 
-BitcoinExchange::BitcoinExchange() {}
+    file.open("data.csv");
+    if (!file.is_open()) {
+        std::cerr << "Error: file not found" << std::endl;
+        return;
+    }
 
-void BitcoinExchange::loadPriceDb(const std::string& filename) {
-    std::ifstream file(filename.c_str());
-    std::string line;
-    while (getline(file, line)) {
-        std::istringstream iss(line);
-        std::string date;
-        double price;
-        if (getline(iss, date, ',') && (iss >> price)) {
-            priceDb[date] = price;
-        }
+    while (file >> date >> value) {
+        AddToDb(date, value);
+    }
+    file.close();
+    showDb();
+    return;
+}
+
+BitcoinExchange::BitcoinExchange(const BitcoinExchange& other) {
+    _db = other._db;
+}
+
+BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange& other) {
+    _db = other._db;
+    return *this;
+}
+
+BitcoinExchange::~BitcoinExchange() {
+    _db.clear();
+}
+
+void BitcoinExchange::AddToDb(const std::string& date, float value) {
+    _db[date] = value;
+}
+
+void BitcoinExchange::showDb() const {
+    for (auto it = _db.begin(); it != _db.end(); it++) {
+        std::cout << it->first << " " << it->second << std::endl;
     }
 }
 
-double BitcoinExchange::getPriceOnDate(const std::string& date, double value) {
-    // Find the closest lower date in the DB
-    std::map<std::string, double>::iterator it = priceDb.lower_bound(date);
-    if (it != priceDb.begin() && (it == priceDb.end() || it->first != date)) {
-        --it; // Go to the closest lower date if exact match not found
+void BitcoinExchange::printDbValue(const std::string& date, float value) const 
+{
+    std::map<std::string, float>::const_iterator it = _db.lower_bound(date);
+    if (it == _db.end())
+    {
+        if (!_db.empty())
+        {
+            --it;
+            std::cout << "Closest previous key: " << it->first << ", Bitcoin value in USD: " << it->second * value << std::endl;
+        } 
+        else
+            std::cout << "Database is empty." << std::endl;
+    } 
+    else if (it != _db.begin() && it->first != date)
+    {
+        --it;
+        std::cout << "Closest previous key: " << it->first << ", Bitcoin value in USD: " << it->second * value << std::endl;
     }
-    if (it == priceDb.end()) {
-        std::cerr << "Error: Date not found in database." << std::endl;
-        return -1; // Indicate an error
-    }
-    return it->second * value;
+    else
+        std::cout << "Key: " << date << ", Bitcoin value in USD: " << it->second * value << std::endl;
 }

@@ -7,13 +7,19 @@
 #include <sstream>
 #include <iostream>
 
+// #define INT_MAX 2147483647
+
 class BitcoinExchange {
 private:
-    std::map<std::string, double> priceDb;
+    std::map<std::string, float> _db;
 public:
     BitcoinExchange();
-    void loadPriceDb(const std::string& filename);
-    double getPriceOnDate(const std::string& date, double value);
+    BitcoinExchange(const BitcoinExchange& other);
+    BitcoinExchange &operator=(const BitcoinExchange& other);
+    ~BitcoinExchange();
+    void AddToDb(const std::string& date, float value);
+    void showDb() const;
+    void printDbValue(const std::string& date, float value) const;
 };
 
 #endif
