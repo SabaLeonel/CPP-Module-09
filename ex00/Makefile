@@ -8,7 +8,8 @@ CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -o3 -g
 
 # Source files
 SRC = main.cpp \
-	BitcoinExchange.cpp
+	BitcoinExchange.cpp \
+	Check.cpp
 
 # Object files
 OBJ = $(SRC:.cpp=.o)

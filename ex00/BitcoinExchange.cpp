@@ -1,22 +1,32 @@
 #include "BitcoinExchange.hpp"
 
 BitcoinExchange::BitcoinExchange() {
-    std::ifstream file;
+    std::ifstream file("data.csv");
     std::string date;
-    float value;
+    std::string line;
 
-    file.open("data.csv");
     if (!file.is_open()) {
         std::cerr << "Error: file not found" << std::endl;
         return;
     }
+    else{
+        std::getline(file, line);
+        while(std::getline(file, line))
+        {
+            std::istringstream iss(line);
+            std::string date;
+            std::string rateStr;
+            float rate;
 
-    while (file >> date >> value) {
-        AddToDb(date, value);
+            if (std::getline(iss, date, ',') && std::getline(iss, rateStr))
+            {
+                rate = std::stof(rateStr);
+                AddToDb(date, rate);
+            }
+        }
+
+        file.close();
     }
-    file.close();
-    showDb();
-    return;
 }
 
 BitcoinExchange::BitcoinExchange(const BitcoinExchange& other) {
@@ -24,25 +34,24 @@ BitcoinExchange::BitcoinExchange(const BitcoinExchange& other) {
 }
 
 BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange& other) {
-    _db = other._db;
+    if (this != &other)
+        this->_db = other._db;
     return *this;
 }
 
-BitcoinExchange::~BitcoinExchange() {
-    _db.clear();
-}
+BitcoinExchange::~BitcoinExchange() {}
 
 void BitcoinExchange::AddToDb(const std::string& date, float value) {
     _db[date] = value;
 }
 
-void BitcoinExchange::showDb() const {
-    for (auto it = _db.begin(); it != _db.end(); it++) {
-        std::cout << it->first << " " << it->second << std::endl;
-    }
+void BitcoinExchange::showDb() const 
+{
+    for (std::map<std::string, float>::const_iterator it = _db.begin(); it != _db.end(); ++it) 
+        std::cout << "Date: " << it->first << ", Value: " << it->second << std::endl;
 }
 
-void BitcoinExchange::printDbValue(const std::string& date, float value) const 
+void BitcoinExchange::printDbValue(const std::string& date, float value) const
 {
     std::map<std::string, float>::const_iterator it = _db.lower_bound(date);
     if (it == _db.end())
@@ -50,7 +59,7 @@ void BitcoinExchange::printDbValue(const std::string& date, float value) const
         if (!_db.empty())
         {
             --it;
-            std::cout << "Closest previous key: " << it->first << ", Bitcoin value in USD: " << it->second * value << std::endl;
+            std::cout << "Closest previous date: " << it->first << ", Bitcoin value in USD: " << it->second * value << std::endl;
         } 
         else
             std::cout << "Database is empty." << std::endl;
@@ -58,8 +67,8 @@ void BitcoinExchange::printDbValue(const std::string& date, float value) const
     else if (it != _db.begin() && it->first != date)
     {
         --it;
-        std::cout << "Closest previous key: " << it->first << ", Bitcoin value in USD: " << it->second * value << std::endl;
+        std::cout << "Closest previous date: " << it->first << ", Bitcoin value in USD: " << it->second * value << std::endl;
     }
     else
-        std::cout << "Key: " << date << ", Bitcoin value in USD: " << it->second * value << std::endl;
+        std::cout << "Date: " << date << ", Bitcoin value in USD: " << it->second * value << std::endl;
 }

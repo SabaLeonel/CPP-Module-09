@@ -1,14 +1,15 @@
 #include "BitcoinExchange.hpp"
 
 
+int	validateLine(std::string line);
+
 int main(int ac, char **av)
 {
     std::ifstream file;
     std::string date;
-    float value;
 
     if (ac != 2) {
-        std::cerr << "Usage: ./ex00 [filename]" << std::endl;
+        std::cerr << "Usage: ./btc data.csv input.txt" << std::endl;
         return 1;
     }
 
@@ -19,15 +20,24 @@ int main(int ac, char **av)
     }
 
     BitcoinExchange exchange;
-
-    while (file >> date >> value) {
-        exchange.AddToDb(date, value);
+    std::string line;
+    std::getline(file, line);
+    if(line.empty() || (line == "date | value" && file.peek() == EOF))
+    {
+        std::cerr << "File is empty \n";
+        return (1);
+    }
+    while(std::getline(file, line))
+    {
+        if (validateLine(line))
+        {
+            exchange.printDbValue(line.substr(0,10), std::stof(line.substr(13, line.size() - 13)));
+        }
+        else
+            // std::cout << "Big man ting yeah not valid..." << std::endl;
+        std::cout << std::endl;
     }
 
-    exchange.showDb();
-
     file.close();
-
     return 0;
-
 }
