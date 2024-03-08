@@ -70,5 +70,5 @@ void BitcoinExchange::printDbValue(const std::string& date, float value) const
         std::cout << "Closest previous date: " << it->first << ", Bitcoin value in USD: " << it->second * value << std::endl;
     }
     else
-        std::cout << "Date: " << date << ", Bitcoin value in USD: " << it->second * value << std::endl;
+        std::cout << "Date<: " << date << ", Bitcoin value in USD: " << it->second * value << std::endl;
 }
