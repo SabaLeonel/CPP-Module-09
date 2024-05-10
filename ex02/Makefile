@@ -1,5 +1,5 @@
 # Name of your executable
-TARGET = RPN
+TARGET = PmergeMe
 
 # Compiler to use
 CXX = c++
@@ -8,7 +8,7 @@ CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -o3 -g
 
 # Source files
 SRC = main.cpp \
-	pmergeme.cpp \
+	PmergeMe.cpp \
 
 # Object files
 OBJ = $(SRC:.cpp=.o)
