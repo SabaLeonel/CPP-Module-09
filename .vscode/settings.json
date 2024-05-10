@@ -115,6 +115,23 @@
     "variant": "cpp",
     "vector": "cpp",
     "algorithm": "cpp",
-    "deque": "cpp"
+    "deque": "cpp",
+    "__functional_base": "cpp",
+    "__nullptr": "cpp",
+    "__string": "cpp",
+    "__tuple": "cpp",
+    "bit": "cpp",
+    "chrono": "cpp",
+    "functional": "cpp",
+    "iterator": "cpp",
+    "list": "cpp",
+    "memory": "cpp",
+    "numeric": "cpp",
+    "random": "cpp",
+    "regex": "cpp",
+    "stack": "cpp",
+    "type_traits": "cpp",
+    "utility": "cpp",
+    "filesystem": "cpp"
   }
 }
